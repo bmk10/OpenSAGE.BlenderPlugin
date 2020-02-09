@@ -6,6 +6,7 @@ import io
 from shutil import copyfile
 from os.path import dirname as up
 
+from io_mesh_w3d.common.utils.aabbtree_creator import *
 from io_mesh_w3d.common.utils.mesh_export import *
 from tests.common.helpers.mesh import *
 from tests.utils import *
@@ -128,6 +129,19 @@ class TestMeshExportUtils(TestCase):
 
                  get_vec(-0.221, -0.086, -0.296)]
 
-        actual = retrieve_aabbtree(verts)
+        triangles = [
+            get_triangle([7, 6, 0], 13, get_vec(), 0.0),
+            get_triangle([0, 6, 4], 13, get_vec(), 0.0),
+            get_triangle([0, 4, 5], 13, get_vec(), 0.0),
+            get_triangle([5, 4, 1], 13, get_vec(), 0.0),
+            get_triangle([5, 1, 2], 13, get_vec(), 0.0),
+            get_triangle([5, 2, 3], 13, get_vec(), 0.0),
+            get_triangle([3, 2, 8], 13, get_vec(), 0.0),
+            get_triangle([3, 8, 9], 13, get_vec(), 0.0),
+            get_triangle([9, 8, 7], 13, get_vec(), 0.0),
+            get_triangle([8, 6, 7], 13, get_vec(), 0.0)]
+
+        creator = AABBTreeCreator()
+        creator.create(triangles, verts)
 
         # compare_aabbtrees(self, expected, actual)
