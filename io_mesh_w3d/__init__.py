@@ -420,6 +420,8 @@ CLASSES = (
     BONE_PROPERTIES_PANEL_PT_w3d,
     MATERIAL_PROPERTIES_PANEL_PT_w3d)
 
+
+from io_mesh_w3d.common.shading.vertex_material_group import VertexMaterialGroup
 from io_mesh_w3d.common.utils.node_group_creator import NodeGroupCreator
 
 
@@ -432,6 +434,8 @@ def create_node_groups():
             continue
         NodeGroupCreator().create(directory, file)
 
+    VertexMaterialGroup.register()
+
 
 def remove_node_groups():
     dirname = os.path.dirname(__file__)
@@ -441,6 +445,8 @@ def remove_node_groups():
         if not file.endswith(".xml"):
             continue
         NodeGroupCreator().unregister(directory, file)
+
+    VertexMaterialGroup.unregister()
 
 
 from io_mesh_w3d.common.shading.node_socket_enum import NodeSocketInterfaceEnum
