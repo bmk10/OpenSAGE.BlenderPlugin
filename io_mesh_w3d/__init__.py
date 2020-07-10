@@ -295,7 +295,10 @@ class MATERIAL_PROPERTIES_PANEL_PT_w3d(Panel):
         mat = context.object.active_material
 
 
+from io_mesh_w3d.common.shading.alpha_node import AlphaNode
+
 CLASSES = (
+    AlphaNode,
     ExportW3D,
     ImportW3D,
     MESH_PROPERTIES_PANEL_PT_w3d,
@@ -306,6 +309,33 @@ CLASSES = (
 from io_mesh_w3d.common.shading.vertex_material_group import VertexMaterialGroup
 from io_mesh_w3d.common.utils.node_group_creator import NodeGroupCreator
 
+
+import nodeitems_utils
+from nodeitems_utils import NodeCategory, NodeItem
+
+
+# all categories in a list
+node_categories = [
+    # identifier, label, items list
+    NodeCategory('SOMENODES', "Some Nodes", items=[
+        # our basic node
+        NodeItem("CustomNodeType"),
+    ]),
+    NodeCategory('OTHERNODES', "Other Nodes", items=[
+        # the node item can have additional settings,
+        # which are applied to new nodes
+        # NB: settings values are stored as string expressions,
+        # for this reason they should be converted to strings using repr()
+        NodeItem("CustomNodeType", label="Node A", settings={
+            "my_string_prop": repr("Lorem ipsum dolor sit amet"),
+            "my_float_prop": repr(1.0),
+        }),
+        NodeItem("CustomNodeType", label="Node B", settings={
+            "my_string_prop": repr("consectetur adipisicing elit"),
+            "my_float_prop": repr(2.0),
+        }),
+    ]),
+]
 
 def create_node_groups():
     dirname = os.path.dirname(__file__)
@@ -351,6 +381,8 @@ def register():
     bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
     bpy.types.TOPBAR_MT_file_export.append(menu_func_export)
 
+    nodeitems_utils.register_node_categories('CUSTOM_NODES', node_categories)
+
     # workaround to register the node group when the addon is active
     # since bpy.data is not yet accessible
     from threading import Timer
@@ -358,6 +390,8 @@ def register():
 
 
 def unregister():
+    nodeitems_utils.unregister_node_categories('CUSTOM_NODES')
+
     remove_node_groups()
 
     for class_ in reversed(CLASSES):
